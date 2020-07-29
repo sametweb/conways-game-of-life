@@ -21,6 +21,7 @@ function App() {
     setGrid(game?.current_life());
   };
 
+  // make it stop after current life and next life is same
   const toggleStart = () => setPlaying(!playing);
 
   useEffect(() => {
