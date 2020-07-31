@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "./game";
 import GridTable from "./GridTable";
 import { samples } from "./samples";
+import { SketchPicker, HuePicker, CompactPicker } from "react-color";
+import GameTutorial from "./GameTutorial";
 
 function App() {
   const [game, setGame] = useState(undefined);
@@ -13,8 +15,11 @@ function App() {
   const [end, setEnd] = useState("");
   const [ms, setMs] = useState(500);
   const [isStable, setIsStable] = useState(false);
+  const [bg, setBg] = useState("#000");
 
-  console.log({ grid });
+  const handleChangeComplete = (color) => {
+    setBg(color.hex);
+  };
 
   const handleCreateGrid = (e) => {
     e.preventDefault();
@@ -42,6 +47,8 @@ function App() {
     let new_grid = game.current_life();
     setGrid(new_grid);
     setYear(0);
+    setEnd("");
+    setIsStable(false);
   };
 
   const toggleCellLife = (row, col) => {
@@ -49,13 +56,12 @@ function App() {
     setGrid(game?.current_life());
   };
 
-  const toggleStart = () => {
+  const toggleStart = (e) => {
     if (!playing && game?.total_cell_count() === 0) {
       alert("Revive some cells to start the life on the planet");
     }
     if (!playing) {
       setEnd("");
-      setYear(0);
       setIsStable(false);
     }
     setPlaying(!playing);
@@ -89,7 +95,13 @@ function App() {
     return (
       <div className="sample" onClick={() => handleSampleGrid(grid)}>
         <GridTable
-          {...{ grid, toggleCellLife: () => {}, col: grid[0].length }}
+          {...{
+            grid,
+            toggleCellLife: () => {},
+            col: grid[0].length,
+            bg: "#000",
+            size: 8,
+          }}
         />
       </div>
     );
@@ -147,7 +159,11 @@ function App() {
           />
         </label>
         <label className="left-row">
+          <CompactPicker color={bg} onChangeComplete={handleChangeComplete} />
+        </label>
+        <label className="left-row">
           <button
+            disabled={!Boolean(game) || playing}
             onClick={() => {
               let random = game.random();
               setGrid(random);
@@ -158,7 +174,7 @@ function App() {
         </label>
         <label className="left-row">
           <button
-            disabled={!Boolean(parseInt(row) * parseInt(col))}
+            disabled={!Boolean(parseInt(row) * parseInt(col)) || !Boolean(game)}
             onClick={toggleStart}
           >
             {playing ? "Stop" : "Start"}
@@ -168,10 +184,13 @@ function App() {
         <div className="samples">{SampleGrids}</div>
       </div>
       <div className="right">
-        <h3>Generation: {year}</h3>
-        {end && <p>{end}</p>}
-        {<span>{isStable && "Life is stable on the planet now."}</span>}
-        {game && <GridTable {...{ grid, toggleCellLife, col }} />}
+        <GameTutorial />
+        {game && (
+          <GridTable
+            style={{ transform: "scale(0.5)" }}
+            {...{ grid, toggleCellLife, col, bg, year, end, isStable }}
+          />
+        )}
       </div>
     </div>
   );

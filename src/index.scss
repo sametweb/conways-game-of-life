@@ -27,12 +27,15 @@ body {
   flex-direction: center;
   height: 100%;
   .left {
+    top: 0;
     width: 30%;
     display: flex;
     flex-direction: column;
     background-color: rgb(39, 39, 39);
     color: white;
-    h1 {
+
+    h1,
+    h2 {
       text-align: center;
     }
     .left-row {
@@ -62,11 +65,11 @@ body {
     .samples {
       overflow-y: auto;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       .sample {
-        transform: scale(0.5);
         cursor: pointer;
+        margin: 0 0 20px 0;
       }
     }
   }
