@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "./game";
 import GridTable from "./GridTable";
+import { samples } from "./samples";
 
 function App() {
   const [game, setGame] = useState(undefined);
@@ -22,10 +23,25 @@ function App() {
     setGrid(game?.current_life());
   };
 
+  const handleSampleGrid = (sampleGrid) => {
+    setRow(sampleGrid.length);
+    setCol(sampleGrid[0].length);
+    const game = new Grid(sampleGrid.length, sampleGrid[0].length);
+    sampleGrid.forEach((rowValue, row) => {
+      rowValue.forEach((colValue, col) => {
+        game.cell(row, col).is_alive = colValue;
+      });
+    });
+    setPlaying(false);
+    setGame(game);
+    setGrid(game?.current_life());
+  };
+
   const handleReset = () => {
     game.reset();
     let new_grid = game.current_life();
     setGrid(new_grid);
+    setYear(0);
   };
 
   const toggleCellLife = (row, col) => {
@@ -69,53 +85,95 @@ function App() {
     return () => clearInterval(interval);
   }, [playing]);
 
+  const SampleGrids = samples.map((grid) => {
+    return (
+      <div className="sample" onClick={() => handleSampleGrid(grid)}>
+        <GridTable
+          {...{ grid, toggleCellLife: () => {}, col: grid[0].length }}
+        />
+      </div>
+    );
+  });
+
   return (
-    <>
-      <form onSubmit={handleCreateGrid}>
-        Rows:{" "}
-        <input
-          disabled={playing}
-          value={row}
-          onChange={(e) => setRow(e.target.value)}
-        ></input>
-        Cols:{" "}
-        <input
-          disabled={playing}
-          value={col}
-          onChange={(e) => setCol(e.target.value)}
-        ></input>
-        <button
-          disabled={playing}
-          type="submit"
-          onClick={() => console.log("clicked")}
-        >
-          Create Grid
-        </button>
-        <button
-          disabled={!Boolean(game) || playing}
-          type="reset"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
-      </form>
-      <button onClick={toggleStart}>{playing ? "Stop" : "Start"}</button>
-      Set Speed ({ms}ms):
-      <input
-        disabled={playing}
-        value={ms}
-        onChange={(e) => setMs(e.target.value)}
-        type="range"
-        min="100"
-        max="1000"
-      />
-      Life:{" "}
-      <span>
-        {year} {end}
-      </span>
-      {<span>{isStable && "Life is stable on the planet now."}</span>}
-      {game && <GridTable {...{ grid, toggleCellLife, col }} />}
-    </>
+    <div className="wrapper">
+      <div className="left">
+        <h1>Conway's Game of Life</h1>
+        <form onSubmit={handleCreateGrid}>
+          <label className="left-row">
+            Rows:
+            <input
+              type="text"
+              disabled={playing}
+              value={row}
+              onChange={(e) => setRow(e.target.value)}
+            ></input>
+          </label>
+          <label className="left-row">
+            Columns:
+            <input
+              type="text"
+              disabled={playing}
+              value={col}
+              onChange={(e) => setCol(e.target.value)}
+            ></input>
+          </label>
+          <label className="left-row">
+            <button
+              disabled={playing}
+              type="submit"
+              onClick={() => console.log("clicked")}
+            >
+              Create Grid
+            </button>
+            <button
+              disabled={!Boolean(game) || playing}
+              type="reset"
+              onClick={handleReset}
+            >
+              Reset Grid
+            </button>
+          </label>
+        </form>
+        <label className="left-row">
+          Set Speed ({ms}ms):
+          <input
+            disabled={!Boolean(game) || playing}
+            value={ms}
+            onChange={(e) => setMs(e.target.value)}
+            type="range"
+            min="50"
+            max="1000"
+          />
+        </label>
+        <label className="left-row">
+          <button
+            onClick={() => {
+              let random = game.random();
+              setGrid(random);
+            }}
+          >
+            Revive Random Cells
+          </button>
+        </label>
+        <label className="left-row">
+          <button
+            disabled={!Boolean(parseInt(row) * parseInt(col))}
+            onClick={toggleStart}
+          >
+            {playing ? "Stop" : "Start"}
+          </button>
+        </label>
+        <h2>Load Sample Grids</h2>
+        <div className="samples">{SampleGrids}</div>
+      </div>
+      <div className="right">
+        <h3>Generation: {year}</h3>
+        {end && <p>{end}</p>}
+        {<span>{isStable && "Life is stable on the planet now."}</span>}
+        {game && <GridTable {...{ grid, toggleCellLife, col }} />}
+      </div>
+    </div>
   );
 }
 

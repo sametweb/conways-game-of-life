@@ -14,7 +14,7 @@ function GridTable({ grid, toggleCellLife, col }) {
                 height: 15,
                 borderRight: "1px solid #ccc",
                 borderBottom: "1px solid #ccc",
-                backgroundColor: grid[row][col] ? "darkblue" : undefined,
+                backgroundColor: grid[row][col] ? "rgb(39, 39, 39)" : "white",
               }}
             ></div>
           );
