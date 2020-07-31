@@ -101,6 +101,7 @@ function App() {
             col: grid[0].length,
             bg: "#000",
             size: 8,
+            year: false,
           }}
         />
       </div>
@@ -110,7 +111,6 @@ function App() {
   return (
     <div className="wrapper">
       <div className="left">
-        <h1>Conway's Game of Life</h1>
         <form onSubmit={handleCreateGrid}>
           <label className="left-row">
             Rows:
