@@ -91,6 +91,16 @@ export class Grid {
     }
   }
 
+  random() {
+    let result = Object.values(this.grid).map((rowArray, row) => {
+      return Object.values(rowArray).map((cell, col) => {
+        let life = Math.round(Math.random()) && this.toggle_life(row, col);
+        return life;
+      });
+    });
+    return result;
+  }
+
   current_life() {
     return Object.values(this.grid).map((line) =>
       Object.values(line).map((cell) => cell.is_alive)
