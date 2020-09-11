@@ -1,8 +1,8 @@
 import React from "react";
 
-function GameTutorial(props) {
+function GameTutorial({ hide }) {
   return (
-    <div>
+    <div className={`tutorial${hide}`}>
       <h2>Conway's Game of Life</h2>
       <h3>Before you create your first grid planet</h3>
       <p>

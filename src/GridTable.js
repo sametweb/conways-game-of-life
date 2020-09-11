@@ -14,7 +14,11 @@ function GridTable({
     <div style={{ paddingTop: 20 }}>
       {year.toString() && (
         <h3 className="gen">
-          Generation<span>{year}</span>
+          {typeof year === "number" && (
+            <>
+              Generation <span>{year}</span>
+            </>
+          )}
         </h3>
       )}
       {end && <p>{end}</p>}

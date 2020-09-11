@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "./game";
 import GridTable from "./GridTable";
 import { samples } from "./samples";
-import { SketchPicker, HuePicker, CompactPicker } from "react-color";
+import { CompactPicker } from "react-color";
 import GameTutorial from "./GameTutorial";
 
 function App() {
@@ -108,11 +108,13 @@ function App() {
     );
   });
 
+  const hiddenWhenPlaying = playing ? " hide" : "";
+
   return (
     <div className="wrapper">
-      <div className="left">
+      <div className={`left`}>
         <form onSubmit={handleCreateGrid}>
-          <label className="left-row">
+          <label className={`left-row${hiddenWhenPlaying}`}>
             Rows:
             <input
               type="text"
@@ -121,7 +123,7 @@ function App() {
               onChange={(e) => setRow(e.target.value)}
             ></input>
           </label>
-          <label className="left-row">
+          <label className={`left-row${hiddenWhenPlaying}`}>
             Columns:
             <input
               type="text"
@@ -130,7 +132,7 @@ function App() {
               onChange={(e) => setCol(e.target.value)}
             ></input>
           </label>
-          <label className="left-row">
+          <label className={`left-row${hiddenWhenPlaying}`}>
             <button
               disabled={playing}
               type="submit"
@@ -147,7 +149,7 @@ function App() {
             </button>
           </label>
         </form>
-        <label className="left-row">
+        <label className={`left-row${hiddenWhenPlaying}`}>
           Set Speed ({ms}ms):
           <input
             disabled={!Boolean(game) || playing}
@@ -158,10 +160,10 @@ function App() {
             max="1000"
           />
         </label>
-        <label className="left-row">
+        <label className={`left-row${hiddenWhenPlaying}`}>
           <CompactPicker color={bg} onChangeComplete={handleChangeComplete} />
         </label>
-        <label className="left-row">
+        <label className={`left-row${hiddenWhenPlaying}`}>
           <button
             disabled={!Boolean(game) || playing}
             onClick={() => {
@@ -180,14 +182,16 @@ function App() {
             {playing ? "Stop" : "Start"}
           </button>
         </label>
-        <h2>Load Sample Grids</h2>
-        <div className="samples">{SampleGrids}</div>
+        <div className={`samples${hiddenWhenPlaying}`}>
+          <h2>Load Sample Grids</h2>
+          {SampleGrids}
+        </div>
       </div>
       <div className="right">
-        <GameTutorial />
+        <GameTutorial hide={hiddenWhenPlaying} />
         {game && (
           <GridTable
-            style={{ transform: "scale(0.5)" }}
+            style={{ transform: "scale(0.4)" }}
             {...{ grid, toggleCellLife, col, bg, year, end, isStable }}
           />
         )}
