@@ -2,7 +2,7 @@ import React from "react";
 
 function GameTutorial({ hide }) {
   return (
-    <div className={`tutorial${hide}`}>
+    <div className={`${hide}`}>
       <h2>Conway's Game of Life</h2>
       <h3>Before you create your first grid planet</h3>
       <p>
